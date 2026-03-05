@@ -1,7 +1,5 @@
-FROM caddy:alpine
+FROM nginx:alpine
 
-WORKDIR /srv
-
-COPY index.html .
+COPY index.html /usr/share/nginx/html/
 
 EXPOSE 80
