@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>u64 - tiny hardware. big services.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg: #000000;
+      --fg: #e5e5e5;
+      --fg-dim: #999999;
+      --fg-muted: #666666;
+      --border: #333333;
+    }
+    
+    body {
+      font-family: 'Space Mono', monospace;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4rem;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+    
+    .logo svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+    
+    a {
+      color: var(--fg);
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    main {
+      flex: 1;
+      max-width: 1100px;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    
+    .tagline {
+      color: var(--fg-dim);
+      margin-bottom: 3rem;
+    }
+    
+    section h2 {
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+    
+    .card {
+      border: 1px solid var(--border);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    
+    .card:hover {
+      border-color: var(--fg-dim);
+    }
+    
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+    
+    .card-title {
+      font-weight: 700;
+    }
+    
+    .card-meta {
+      font-size: 0.625rem;
+      color: var(--fg-muted);
+      text-transform: lowercase;
+    }
+    
+    .card-desc {
+      font-size: 0.875rem;
+      color: var(--fg-dim);
+    }
+    
+    .top-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    
+    @media (min-width: 768px) {
+      .top-section {
+        grid-template-columns: 1.2fr 0.8fr;
+      }
+    }
+    
+    .about-section {
+      border-left: 1px solid var(--border);
+      padding-left: 1.5rem;
+    }
+    
+    .about-text {
+      color: var(--fg-dim);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    
+    .about-text a {
+      color: var(--fg-dim);
+    }
+    
+    .about-text a:hover {
+      color: var(--fg);
+    }
+    
+    .support-section {
+      margin-top: 3rem;
+    }
+    
+    .org-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    
+    @media (min-width: 640px) {
+      .org-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (min-width: 900px) {
+      .org-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    
+    .bg-icon {
+      position: fixed;
+      bottom: -5%;
+      right: -5%;
+      width: 100vw;
+      height: 100vw;
+      max-width: 800px;
+      max-height: 800px;
+      color: var(--fg);
+      opacity: 0.08;
+      transform: rotate(-15deg);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .bg-icon svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    header, main, footer {
+      position: relative;
+      z-index: 1;
+    }
+    
+    footer {
+      margin-top: 4rem;
+      font-size: 0.75rem;
+      color: var(--fg-muted);
+    }
+    
+    @media (min-width: 768px) {
+      body {
+        padding: 3rem;
+      }
+      
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 12h2"/>
+      <path d="M4 12h2"/>
+      <path d="M12 18v2"/>
+      <path d="M12 4v2"/>
+      <path d="M8 8h8v8H8z"/>
+      <path d="M8 4v4"/>
+      <path d="M16 4v4"/>
+      <path d="M8 16v4"/>
+      <path d="M16 16v4"/>
+      <path d="M4 8h4"/>
+      <path d="M16 8h4"/>
+      <path d="M4 16h4"/>
+      <path d="M16 16h4"/>
+    </svg>
+  </div>
+
+  <header>
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+        <path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+        <path d="M9 9h1"/>
+        <path d="M17 9h1"/>
+      </svg>
+      u64
+    </div>
+    <a href="https://github.com/u64-co" aria-label="GitHub">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+      </svg>
+    </a>
+  </header>
+
+  <main>
+    <h1>tiny hardware.<br>big services.</h1>
+    <p class="tagline">open source web servers and services for microcontrollers.<br>built for the ESP32 ecosystem.</p>
+
+    <div class="top-section">
+      <section>
+        <h2>projects</h2>
+        
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Nysa</span>
+            <span class="card-meta">soon</span>
+          </div>
+          <div class="card-desc">lightweight HTTP server for ESP32</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Sudety</span>
+            <span class="card-meta">planned</span>
+          </div>
+          <div class="card-desc">secure reverse proxy with auto TLS</div>
+        </div>
+      </section>
+
+      <aside class="about-section">
+        <h2>about</h2>
+        <p class="about-text">
+          u64 is a not-for-profit open source project based in Northants, UK. 
+          our goal is to minimise power usage and create truly free infrastructure 
+          that can run entirely on off-grid power systems — solar, battery, or 
+          whatever you have available.
+        </p>
+        <p class="about-text">
+          built by <a href="https://mchal.lol" target="_blank" rel="noopener">Michal S.</a>
+        </p>
+      </aside>
+    </div>
+
+    <section class="support-section">
+      <h2>support</h2>
+      <p class="about-text" style="margin-bottom: 1rem;">
+        want to support our work? don't. support these organisations that share our ethos:
+      </p>
+      <div class="org-grid">
+        <a href="https://www.solaraid.org" target="_blank" rel="noopener" class="card">
+          <div class="card-title">SolarAid</div>
+          <div class="card-desc">solar power for Africa</div>
+        </a>
+        <a href="https://www.renewableuk.com" target="_blank" rel="noopener" class="card">
+          <div class="card-title">RenewableUK</div>
+          <div class="card-desc">wind & renewable energy</div>
+        </a>
+        <a href="https://www.carbontrust.com" target="_blank" rel="noopener" class="card">
+          <div class="card-title">Carbon Trust</div>
+          <div class="card-desc">energy efficiency & low carbon</div>
+        </a>
+        <a href="https://www.niauk.org" target="_blank" rel="noopener" class="card">
+          <div class="card-title">NIA</div>
+          <div class="card-desc">nuclear industry association</div>
+        </a>
+        <a href="https://cat.org.uk" target="_blank" rel="noopener" class="card">
+          <div class="card-title">CAT</div>
+          <div class="card-desc">centre for alternative technology</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>u64.co.uk &middot; open source &middot; mit licensed</div>
+    <div style="margin-top: 0.5rem; color: var(--fg-dim);">served by <span style="color: var(--fg);">Nysa</span></div>
+  </footer>
+</body>
+</html>
